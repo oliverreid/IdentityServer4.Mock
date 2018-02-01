@@ -19,7 +19,7 @@ namespace BookingApi.Web.Controllers
         [Route("ping/secure")]
         public string PingSecured()
         {
-            return "All good. You only get this message if you are authenticated.";
+            return "Authenticated";
         }
 
         [Authorize]
