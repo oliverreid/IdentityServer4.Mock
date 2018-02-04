@@ -34,7 +34,6 @@ module "booking-api" {
 }
 
 
-
 output "invoke_url" {
   value = "${module.booking-api.aws_api_gateway_deployment_invoke_url}"
 }
