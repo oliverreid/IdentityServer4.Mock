@@ -5,7 +5,7 @@ steps:
     working_directory: ${{main_clone}}/src
     description: Build and Test
     commands:
-      - dotnet test
+      - dotnet test ./BookingApi.IntegrationTest/BookingApi.IntegrationTest.csproj
       - cd BookingApi.Web
       - dotnet lambda package
   deploy:
