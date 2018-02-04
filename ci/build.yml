@@ -1,7 +1,7 @@
 version: '1.0'
 steps:
   build:
-    image: microsoft/dotnet:2/0-sdk-jessie
+    image: microsoft/dotnet:2.0-sdk-jessie
     working_directory: ${{main_clone}}/src
     description: Build and Test
     commands:
