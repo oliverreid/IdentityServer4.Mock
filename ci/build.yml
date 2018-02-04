@@ -5,6 +5,7 @@ steps:
     working_directory: ${{main_clone}}/src
     description: Build and Test
     commands:
+      - apt-get update && apt-get -y install zip
       - dotnet test ./BookingApi.IntegrationTest/BookingApi.IntegrationTest.csproj
       - cd BookingApi.Web
       - dotnet lambda package
