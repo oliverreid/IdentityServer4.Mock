@@ -1,0 +1,16 @@
+version: '1.0'
+steps:
+  build:
+    image: microsoft/dotnet:2/0-sdk-jessie
+    working_directory: ${{main_clone}}/src
+    description: Build and Test
+    commands:
+      - dotnet test
+      - cd BookingApi.Web
+      - dotnet lambda package
+  deploy:
+    image: mtranter/terragrunt
+    title: Deploy
+    working_directory: ${{main_clone}}/deploy
+    commands:
+      - terragrunt apply -auto-approve 

@@ -8,7 +8,7 @@ namespace BookingApi.Web.Controllers
     public class PingController : Controller
     {
         [HttpGet]
-        [Route("ping")]
+        [Route("ping")]    
         public string Ping()
         {
             return "Pong";

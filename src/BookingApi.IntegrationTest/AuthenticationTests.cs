@@ -17,6 +17,9 @@ namespace BookingApi.IntegrationTest
         private readonly TestServer _server;
         private readonly HttpClient _client;
 
+        private const string TOKEN =
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVSkVOVFpHUkRoRlFrTkVPRVJFTUVSQk5qZEdPRGRFUXpWR1F6UkVORVpCT1RJek5FWXdSUSJ9.eyJpc3MiOiJodHRwczovL2Rvc3R1ZmYuYXUuYXV0aDAuY29tLyIsInN1YiI6IklpU0RRdEJOMUtBNmlueGtIazE0czRRdlpBdUVabHBYQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2Jvb2tpbmctYXBpLmRvc3R1ZmYiLCJpYXQiOjE1MTc2OTgwMzQsImV4cCI6MTUxNzc4NDQzNCwiYXpwIjoiSWlTRFF0Qk4xS0E2aW54a0hrMTRzNFF2WkF1RVpscFgiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.tSG3ONjzDJSJYmNmFy1zyH8AkVxm3ue93721qeigYVjP3r_mPvKDIwlh_JJp4qiarXtw_hPfcajSzEKPFJYESj9HkD-MkPvj3U-e4z7U13lEIXVuthvo4-Sj9Cpnk5RqoPHzwM4UPglKPqK-3g4Uy62RpEW7a3-OQlvD8wBwp0uLLqkIvBfceM0_E1gqAiV6moO-7IuVHSx_wiLXpLX1_AlnbjpKp3-C4D2J4fij0KdyeVZTrCGY3Ov_hNH21CfYZtpd444CYSDJ9LxOVFCZhDY115OkvuxAadlF-9zoyMpf1tQmx_CvwI9TfubjKnlQAMBRjCGlp-eynnnq2Mt0TA";
+
         public AuthenticationTestsShould()
         {
             
@@ -52,18 +55,33 @@ namespace BookingApi.IntegrationTest
         
         
         [Fact]
-        public async Task RetrieveContentFromSecureEndpointWithoken()
+        public async Task RetrieveContentFromSecureEndpointWithToken()
         {
             var request = new HttpRequestMessage() {
                 RequestUri = new Uri(_server.BaseAddress + "api/ping/secure"),
                 Method = HttpMethod.Get,
             };
-            request.Headers.Add("authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVSkVOVFpHUkRoRlFrTkVPRVJFTUVSQk5qZEdPRGRFUXpWR1F6UkVORVpCT1RJek5FWXdSUSJ9.eyJpc3MiOiJodHRwczovL2Rvc3R1ZmYuYXUuYXV0aDAuY29tLyIsInN1YiI6IklpU0RRdEJOMUtBNmlueGtIazE0czRRdlpBdUVabHBYQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2Jvb2tpbmctYXBpLmRvc3R1ZmYiLCJpYXQiOjE1MTc0NTA3NDEsImV4cCI6MTUxNzUzNzE0MSwiYXpwIjoiSWlTRFF0Qk4xS0E2aW54a0hrMTRzNFF2WkF1RVpscFgiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.ukPhEqD1iDMCaGaBGiZ56dlXrzoeNOoDswWy8OjaruzJCh2k-vzDcJDnsu0eUAN5AYb13WucdbsB6Z_mbp_YPyOU4E0BzCAZ0SVbFr_SpJUEpDB7kOGCoKVw46UlXv4sWd_eb56ay-6jhbJiB31jTaIsNgtpMbOMUYSBmFU813hrNDLx9wASFnhZd3-8T-I7fyIsmhd5jHfuBjPhV5HdbiphKGBmVGEPDEBgIfNqxd2HxStAMz73SHwySlm3P9oSTfT1LICfFYm8OpCGcpoFfc8_IvFG_esPtv5mJJA7l8UywJ6uQSD6yfmXty5nQXWzczppPrbmPwoPlskZHVnIWA");
+            request.Headers.Add("authorization", "Bearer " + TOKEN);
             var response = await _client.SendAsync(request);
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
             Assert.Equal("Authenticated", responseString);
+        }
+        
+        
+        [Fact]
+        public async Task RetrieveClaimsFromSecureEndpointWithToken()
+        {
+            var request = new HttpRequestMessage() {
+                RequestUri = new Uri(_server.BaseAddress + "api/claims"),
+                Method = HttpMethod.Get,
+            };
+            request.Headers.Add("authorization", "Bearer " + TOKEN);
+            var response = await _client.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var responseString = await response.Content.ReadAsStringAsync();
         }
     }
 }
