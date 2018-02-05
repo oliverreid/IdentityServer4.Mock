@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using BookingApi.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Xunit;
 
 namespace BookingApi.IntegrationTest
@@ -18,7 +20,7 @@ namespace BookingApi.IntegrationTest
         private readonly HttpClient _client;
 
         private const string TOKEN =
-            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVSkVOVFpHUkRoRlFrTkVPRVJFTUVSQk5qZEdPRGRFUXpWR1F6UkVORVpCT1RJek5FWXdSUSJ9.eyJpc3MiOiJodHRwczovL2Rvc3R1ZmYuYXUuYXV0aDAuY29tLyIsInN1YiI6IklpU0RRdEJOMUtBNmlueGtIazE0czRRdlpBdUVabHBYQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2Jvb2tpbmctYXBpLmRvc3R1ZmYiLCJpYXQiOjE1MTc2OTgwMzQsImV4cCI6MTUxNzc4NDQzNCwiYXpwIjoiSWlTRFF0Qk4xS0E2aW54a0hrMTRzNFF2WkF1RVpscFgiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.tSG3ONjzDJSJYmNmFy1zyH8AkVxm3ue93721qeigYVjP3r_mPvKDIwlh_JJp4qiarXtw_hPfcajSzEKPFJYESj9HkD-MkPvj3U-e4z7U13lEIXVuthvo4-Sj9Cpnk5RqoPHzwM4UPglKPqK-3g4Uy62RpEW7a3-OQlvD8wBwp0uLLqkIvBfceM0_E1gqAiV6moO-7IuVHSx_wiLXpLX1_AlnbjpKp3-C4D2J4fij0KdyeVZTrCGY3Ov_hNH21CfYZtpd444CYSDJ9LxOVFCZhDY115OkvuxAadlF-9zoyMpf1tQmx_CvwI9TfubjKnlQAMBRjCGlp-eynnnq2Mt0TA";
+            "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVSkVOVFpHUkRoRlFrTkVPRVJFTUVSQk5qZEdPRGRFUXpWR1F6UkVORVpCT1RJek5FWXdSUSJ9.eyJpc3MiOiJodHRwczovL2Rvc3R1ZmYuYXUuYXV0aDAuY29tLyIsInN1YiI6IklpU0RRdEJOMUtBNmlueGtIazE0czRRdlpBdUVabHBYQGNsaWVudHMiLCJhdWQiOiJodHRwczovL2Jvb2tpbmctYXBpLmRvc3R1ZmYiLCJpYXQiOjE1MTc3OTk1ODEsImV4cCI6MTUxNzg4NTk4MSwiYXpwIjoiSWlTRFF0Qk4xS0E2aW54a0hrMTRzNFF2WkF1RVpscFgiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMifQ.P8r9IQaCUFmy9CsITtOA3gL6bW2RzLtHUgjAdPZBmQGI-ds06VY18czaRSGqHgj-watVmleM3z7sZpP_AX36dQGmEXc1pqkBbqyU01Sg2dNUl1QxTipdbU7wladydlrjLXAHvmorkzhyHnlYQa3HM6Klyv39t5kn_YNq2GVK-JdXIKENfxNdyTt7EudArPTVAM7XcB_gEvj0qo8oO5ZRAsgg8BsUWShzTNOSiqwvPRegSXI7u1ewsb4lXFLyn0mpUkKut_Z09gWBn1pe-r5UI7vf3HYsttIid5KfyxI-hZ0HzCqCIHNehzmZyTXAIz1NfZt1V_rSoMBvHjf7pVG4tA";
 
         public AuthenticationTestsShould()
         {
@@ -82,6 +84,13 @@ namespace BookingApi.IntegrationTest
             response.EnsureSuccessStatusCode();
 
             var responseString = await response.Content.ReadAsStringAsync();
+            var responseVals = Deserialize(new[] { new {Type = "", Value = ""}}, responseString);
+            Assert.True(responseVals.Length > 0);
+            Assert.Equal(responseVals.First(v => v.Type == "azp").Value, "IiSDQtBN1KA6inxkHk14s4QvZAuEZlpX");
+            
         }
+
+        private T Deserialize<T>(T template, string json) => JsonConvert.DeserializeObject<T>(json);
+
     }
 }

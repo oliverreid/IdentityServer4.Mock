@@ -7,19 +7,6 @@ namespace BookingApi.Test.Events
 {
     public class EventShould
     {
-        [Fact]
-        public void BroadcastEventCreatedEvent()
-        {
-            EventCreatedEvent ece = null;
-            DomainEvents.OnEventCreated(e => ece = e);
-
-            var testEventId = Guid.NewGuid().ToString();
-            var testProviderId = Guid.NewGuid().ToString();
-            
-            var newEvent = new Event(testEventId, testProviderId, Capacity.Infinite, DateTime.Now, DateTime.Now, Enumerable.Empty<IEventBooking>());
-            
-            Assert.True(ece.EventId == testEventId && ece.ProviderId == testProviderId);
-        }
         
         [Fact]
         public void BroadcastEventBookingCreatedEvent()
