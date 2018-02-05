@@ -8,30 +8,28 @@ namespace BookingApi.Domain.Events
 {
     public class Event: IEvent
     {
-        [DynamoDBProperty("EventId")]
-        private readonly string _eventId;
-        [DynamoDBProperty("ProdivderId")]
-        private readonly string _providerId;
-        [DynamoDBProperty("Capacity")]
-        private readonly Capacity _capacity;
-        [DynamoDBProperty("StartTime")]
-        private readonly DateTime _startTime;
-        [DynamoDBProperty("EndTime")]
-        private readonly DateTime _endTime;
+        public string EventId { get; }
+        public string ProviderId { get; }
+        public Capacity Capacity { get; }
+        public DateTime StartTime { get; }
+        public DateTime EndTime { get; }
+        public IEnumerable<IEventBooking> Bookings { get; }
 
-        [DynamoDBProperty("Bookings")]
-        private readonly IList<IEventBooking> _bookings = new List<IEventBooking>();
-
-        public Event(string eventId, string providerId, Capacity capacity, DateTime startTime, DateTime endTime)
+        public Event(
+            string eventId, 
+            string providerId, 
+            Capacity capacity, 
+            DateTime startTime, 
+            DateTime endTime, 
+            IEnumerable<IEventBooking> bookings)
         {
-            _eventId = eventId;
-            _providerId = providerId;
-            _capacity = capacity;
-            _startTime = startTime;
-            _endTime = endTime;
-            DomainEvents.RaiseEventCreated(new EventCreatedEvent(eventId, providerId));
+            EventId = eventId;
+            ProviderId = providerId;
+            Capacity = capacity;
+            StartTime = startTime;
+            EndTime = endTime;
+            Bookings = (bookings ?? Enumerable.Empty<IEventBooking>()).ToList();
         }
-
 
         public bool CanTakeBooking(IEventBooking booking)
         {
@@ -45,25 +43,12 @@ namespace BookingApi.Domain.Events
                 throw new EventBookingException("Cannot take this booking");
             }
             
-            _bookings.Add(booking);
-            DomainEvents.RaiseEventBookingCreated(new EventBookingCreated(_eventId, booking));
+            ((List<IEventBooking>)Bookings).Add(booking);
+            DomainEvents.RaiseEventBookingCreated(new EventBookingCreated(EventId, booking));
         }
 
-        private bool IsFull => CurrentPlacesBooked >= _capacity;
+        private bool IsFull => CurrentPlacesBooked >= Capacity;
 
-        private uint CurrentPlacesBooked => (uint)_bookings.Sum(a => (int) a.NumberOfPlacesBooked);
-        
-    }
-
-    public class EventCreatedEvent
-    {
-        public EventCreatedEvent(string eventId, string providerId)
-        {
-            EventId = eventId;
-            ProviderId = providerId;
-        }
-
-        public string EventId { get; private set; }
-        public string ProviderId { get; private set; }
+        private uint CurrentPlacesBooked => (uint)Bookings.Sum(a => (int) a.NumberOfPlacesBooked);
     }
 }

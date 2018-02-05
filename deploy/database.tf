@@ -5,15 +5,9 @@ resource "aws_dynamodb_table" "events_table" {
   read_capacity  = "${var.db_read_capacity}"
   write_capacity = "${var.db_read_capacity}"
   hash_key       = "EventId"
-  range_key      = "ProviderId"
 
   attribute {
     name = "EventId"
-    type = "S"
-  }
-
-  attribute {
-    name = "ProviderId"
     type = "S"
   }
 }

@@ -1,17 +1,24 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace BookingApi.Domain.Events
 {
-    public struct Capacity : IComparable<Capacity>
+    public class Capacity : IComparable<Capacity>
     {
+        private Capacity()
+        {
+        }
+
         private Capacity(uint value)
         {
             Type = CapacityType.Finite;
             Value = value;
         }
 
+        [JsonProperty]
         public CapacityType Type { get; private set; } 
 
+        [JsonProperty]
         public uint? Value { get; private set; }
 
         public static implicit operator Capacity(uint i)

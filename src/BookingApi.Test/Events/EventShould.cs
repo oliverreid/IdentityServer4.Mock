@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Runtime.InteropServices.ComTypes;
+using System.Linq;
 using BookingApi.Domain.Events;
 using Xunit;
 
-namespace BookingApi.Test
+namespace BookingApi.Test.Events
 {
     public class EventShould
     {
@@ -16,7 +16,7 @@ namespace BookingApi.Test
             var testEventId = Guid.NewGuid().ToString();
             var testProviderId = Guid.NewGuid().ToString();
             
-            var newEvent = new Event(testEventId, testProviderId, Capacity.Infinite, DateTime.Now, DateTime.Now);
+            var newEvent = new Event(testEventId, testProviderId, Capacity.Infinite, DateTime.Now, DateTime.Now, Enumerable.Empty<IEventBooking>());
             
             Assert.True(ece.EventId == testEventId && ece.ProviderId == testProviderId);
         }
@@ -30,7 +30,7 @@ namespace BookingApi.Test
             var testEventId = Guid.NewGuid().ToString();
             var testProviderId = Guid.NewGuid().ToString();
             
-            var newEvent = new Event(testEventId, testProviderId, Capacity.Infinite, DateTime.Now, DateTime.Now);
+            var newEvent = new Event(testEventId, testProviderId, Capacity.Infinite, DateTime.Now, DateTime.Now, Enumerable.Empty<IEventBooking>());
             
             var eventBooking = new DummyEventBooking(5);
             newEvent.AddBooking(eventBooking);
@@ -47,7 +47,7 @@ namespace BookingApi.Test
             var testEventId = Guid.NewGuid().ToString();
             var testProviderId = Guid.NewGuid().ToString();
             
-            var newEvent = new Event(testEventId, testProviderId, Capacity.Finite(5), DateTime.Now, DateTime.Now);
+            var newEvent = new Event(testEventId, testProviderId, Capacity.Finite(5), DateTime.Now, DateTime.Now, Enumerable.Empty<IEventBooking>());
             
             var eventBooking = new DummyEventBooking(5);
             newEvent.AddBooking(eventBooking);
