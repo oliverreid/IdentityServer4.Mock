@@ -39,7 +39,7 @@ module.exports = {
       retval.UpdateExpression = retval.UpdateExpression.substring(0, retval.UpdateExpression.length - 2)
     }
     if(retval.removes.length){
-      retval.UpdateExpression += retval.removes.reduce((agg,n) => agg + n + ", ", " remove ")
+      retval.UpdateExpression += (retval.UpdateExpression || "") + retval.removes.reduce((agg,n) => agg + n + ", ", " remove ")
       retval.UpdateExpression = retval.UpdateExpression.substring(0, retval.UpdateExpression.length - 2)
     }
     delete retval.updates
