@@ -8,8 +8,7 @@ module.exports = {
       path = path || ""
       init = init ||  {
         UpdateExpression: "set ",
-        ExpressionAttributeValues: {},
-        ExpressionAttributeNames: {}
+        ExpressionAttributeValues: {}
       };
       return Object.keys(patch).reduce((agg, next) => {
         const val = patch[next];
@@ -21,6 +20,7 @@ module.exports = {
           var key = prop;
           if(reservedWords.indexOf(key.toUpperCase()) >= 0) {
             key = `#alias_${key}`
+            agg.ExpressionAttributeNames = agg.ExpressionAttributeNames || {}
             agg.ExpressionAttributeNames[key] = prop;
           }
           agg.UpdateExpression = agg.UpdateExpression + `${key}=${thisVar}, `
