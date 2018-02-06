@@ -25,6 +25,7 @@ module.exports = {
           }
           if(val) {
             agg.updates.push(`${key}=${thisVar}`)
+            agg.ExpressionAttributeValues = agg.ExpressionAttributeValues || {}
             agg.ExpressionAttributeValues[thisVar] = val
           } else {
             agg.removes.push(key)
