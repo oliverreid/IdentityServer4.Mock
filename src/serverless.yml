@@ -21,13 +21,12 @@ provider:
 
 functions:
   save:
-    handler: eventtemplates/save.save
+    handler: eventtemplates/create.create
     events:
       - http:
           path: eventtemplates
           method: post
           cors: true
-
   list:
     handler: eventtemplates/list.list
     events:

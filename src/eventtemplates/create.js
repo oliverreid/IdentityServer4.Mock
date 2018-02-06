@@ -6,7 +6,7 @@ const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-depe
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-module.exports.save = (event, context, callback) => {
+module.exports.create = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
 
@@ -21,15 +21,16 @@ module.exports.save = (event, context, callback) => {
       return;
     }
 
+    const item = Object.assign({}, data, {
+      id: uuid.v1(),
+      published: false,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
+
     const params = {
       TableName: process.env.EVENT_TEMPLATE_TABLE,
-      Item: {
-        id: uuid.v1(),
-        name: data.name,
-        published: false,
-        createdAt: timestamp,
-        updatedAt: timestamp,
-      },
+      Item: uuid
     };
 
     // write the todo to the database
