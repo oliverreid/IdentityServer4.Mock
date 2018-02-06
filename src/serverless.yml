@@ -20,7 +20,7 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.EVENT_TEMPLATE_TABLE}"
 
 functions:
-  save:
+  create:
     handler: eventtemplates/create.create
     events:
       - http:
@@ -33,6 +33,13 @@ functions:
       - http:
           path: eventtemplates
           method: get
+          cors: true
+  update:
+    handler: eventtemplates/update.update
+    events:
+      - http:
+          path: eventtemplates/{id}
+          method: patch
           cors: true
 
 resources:
