@@ -41,6 +41,20 @@ functions:
           path: eventtemplates/{id}
           method: patch
           cors: true
+  delete:
+    handler: eventtemplates/delete.delete
+    events:
+      - http:
+          path: eventtemplates/{id}
+          method: delete
+          cors: true
+  get:
+    handler: eventtemplates/delete.delete
+    events:
+      - http:
+          path: eventtemplates/{id}
+          method: get
+          cors: true
 
 resources:
   Resources:
