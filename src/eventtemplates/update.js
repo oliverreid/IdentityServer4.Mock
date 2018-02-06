@@ -1,9 +1,9 @@
 'use strict';
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
-const utils = require('./../dynamo/dynamo-utils.js')
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const DynamoRepo = require('./../dynamo/dynamo-repo.js')
+
+const repo = new DynamoRepo(process.env.EVENT_TEMPLATE_TABLE)
 
 module.exports.update = (event, context, callback) => {
   const timestamp = new Date().getTime();
@@ -14,18 +14,10 @@ module.exports.update = (event, context, callback) => {
   delete data.published
   delete data.id
 
-  const params = {
-    TableName: process.env.EVENT_TEMPLATE_TABLE,
-    Key: {
-      id: event.pathParameters.id,
-    },
-    ReturnValues: 'ALL_NEW',
-  };
-
-  var updateObject = Object.assign({}, params, utils.buildUpdateObject(data))
-
   // update the todo in the database
-  dynamoDb.update(updateObject, (error, result) => {
+  repo.update({
+    id: event.pathParameters.id,
+  }, data, (error, result) => {
     // handle potential errors
     if (error) {
       console.error(error);
@@ -40,7 +32,7 @@ module.exports.update = (event, context, callback) => {
     // create a response
     const response = {
       statusCode: 200,
-      body: JSON.stringify(result.Attributes),
+      body: JSON.stringify(result),
     };
     callback(null, response);
   });

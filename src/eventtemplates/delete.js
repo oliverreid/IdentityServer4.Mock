@@ -1,20 +1,16 @@
 
 'use strict';
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const DynamoRepo = require('./../dynamo/dynamo-repo.js')
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const repo = new DynamoRepo(process.env.EVENT_TEMPLATE_TABLE)
 
 module.exports.delete = (event, context, callback) => {
-  const params = {
-    TableName: process.env.EVENT_TEMPLATE_TABLE,
-    Key: {
-      id: event.pathParameters.id,
-    },
-  };
 
   // delete the todo from the database
-  dynamoDb.delete(params, (error) => {
+  repo.delete({
+    id: event.pathParameters.id,
+  }, (error) => {
     // handle potential errors
     if (error){
       console.error(error);

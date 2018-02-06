@@ -1,19 +1,16 @@
 'use strict';
 
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const DynamoRepo = require('./../dynamo/dynamo-repo.js')
+
+const repo = new DynamoRepo(process.env.EVENT_TEMPLATE_TABLE)
 
 module.exports.get = (event, context, callback) => {
-  const params = {
-    TableName: process.env.EVENT_TEMPLATE_TABLE,
-    Key: {
-      id: event.pathParameters.id,
-    },
-  };
 
   // fetch todo from the database
-  dynamoDb.get(params, (error, result) => {
+  repo.get({
+    id: event.pathParameters.id,
+  }, (error, result) => {
     // handle potential errors
     if (error) {
       console.error(error);
@@ -28,7 +25,7 @@ module.exports.get = (event, context, callback) => {
     // create a response
     const response = {
       statusCode: 200,
-      body: JSON.stringify(result.Item),
+      body: JSON.stringify(result),
     };
     callback(null, response);
   });

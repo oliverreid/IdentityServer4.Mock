@@ -2,9 +2,9 @@
 
 const schemas = require('./../schemas.js')
 const uuid = require('uuid');
-const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
+const DynamoRepo = require('./../dynamo/dynamo-repo.js')
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const repo = new DynamoRepo(process.env.EVENT_TEMPLATE_TABLE)
 
 module.exports.create = (event, context, callback) => {
   const timestamp = new Date().getTime();
@@ -28,13 +28,8 @@ module.exports.create = (event, context, callback) => {
       updatedAt: timestamp,
     });
 
-    const params = {
-      TableName: process.env.EVENT_TEMPLATE_TABLE,
-      Item: item
-    };
-
     // write the todo to the database
-    dynamoDb.put(params, (error) => {
+    repo.create(item, (error) => {
       // handle potential errors
       if (error) {
         console.error(error);
@@ -49,7 +44,7 @@ module.exports.create = (event, context, callback) => {
       // create a response
       const response = {
         statusCode: 200,
-        body: JSON.stringify(params.Item),
+        body: JSON.stringify(item),
       };
       callback(null, response);
     });
