@@ -86,3 +86,5 @@ class DynamoRepository {
     });
   }
 }
+
+module.exports = DynamoRepository
