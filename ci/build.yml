@@ -1,18 +1,9 @@
 version: '1.0'
 steps:
-  build:
-    image: microsoft/dotnet:2.0-sdk-jessie
-    working_directory: ${{main_clone}}/src
-    description: Build and Test
-    commands:
-      - apt-get update && apt-get -y install zip
-      - dotnet test ./BookingApi.Test/BookingApi.Test.csproj
-      - dotnet test ./BookingApi.IntegrationTest/BookingApi.IntegrationTest.csproj
-      - cd BookingApi.Web
-      - dotnet lambda package
   deploy:
-    image: mtranter/terragrunt
+    image: node:6.12.3-alpine
     title: Deploy
-    working_directory: ${{main_clone}}/deploy
+    working_directory: ${{main_clone}}/src
     commands:
-      - terragrunt apply -auto-approve 
+      - npm install
+      - npm run deploy

@@ -36,3 +36,5 @@ msbuild.wrn
 
 # Terraform
 .terraform/
+
+node_modules/
