@@ -25,7 +25,7 @@ module.exports.update = (event, context, callback) => {
   var updateObject = Object.assign({}, params, utils.buildUpdateObject(data))
 
   // update the todo in the database
-  dynamoDb.update(params, (error, result) => {
+  dynamoDb.update(updateObject, (error, result) => {
     // handle potential errors
     if (error) {
       console.error(error);
