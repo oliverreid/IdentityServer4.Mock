@@ -8,8 +8,7 @@ module.exports = {
       path = path || ""
       init = init ||  {
         updates: [],
-        removes: [],
-        ExpressionAttributeValues: {}
+        removes: []
       };
       return Object.keys(patch).reduce((agg, next) => {
         const val = patch[next];
