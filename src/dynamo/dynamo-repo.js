@@ -61,7 +61,7 @@ class DynamoRepository {
       // handle potential errors
       if (error) {
         cb(err)
-      } els {
+      } else {
         cb(null, result.Items)
       }
     });
