@@ -49,7 +49,7 @@ functions:
           method: delete
           cors: true
   get:
-    handler: eventtemplates/delete.delete
+    handler: eventtemplates/get.get
     events:
       - http:
           path: eventtemplates/{id}
