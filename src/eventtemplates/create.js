@@ -30,7 +30,7 @@ module.exports.create = (event, context, callback) => {
 
     const params = {
       TableName: process.env.EVENT_TEMPLATE_TABLE,
-      Item: uuid
+      Item: item
     };
 
     // write the todo to the database
