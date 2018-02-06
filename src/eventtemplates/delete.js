@@ -16,7 +16,7 @@ module.exports.delete = (event, context, callback) => {
   // delete the todo from the database
   dynamoDb.delete(params, (error) => {
     // handle potential errors
-    if (error)
+    if (error){
       console.error(error);
       callback(null, {
         statusCode: error.statusCode || 501,
@@ -33,3 +33,5 @@ module.exports.delete = (event, context, callback) => {
     };
     callback(null, response);
   });
+
+}
